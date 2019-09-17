@@ -1,0 +1,12 @@
+[[https://www.gnu.org/licenses/gpl-3.0][https://img.shields.io/badge/License-GPLv3-blue.svg]]
+
+* Description
+GitHub allows to register [[https://developer.github.com/webhooks/][Webhooks]] for your repositories. Everytime an
+[[https://developer.github.com/v3/activity/events/][Event]] occurs a call to the registered endpoint will be made with the
+details of the Event.
+
+This library is a handler for those Events, allowing the user to put
+any logic for a given Event and react accordingly.
+
+* Example
+To be done.
