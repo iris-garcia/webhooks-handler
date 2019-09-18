@@ -8,5 +8,11 @@ details of the Event.
 This library is a handler for those Events, allowing the user to put
 any logic for a given Event and react accordingly.
 
+The choosen language is [[https://golang.org/][Go]] for different reasons, but the two main
+ones are:
+1. It is already used in many services and libraries.
+2. It is a challenge for myself because as the time of writting I did
+   never code in Go.
+
 * Example
 To be done.
