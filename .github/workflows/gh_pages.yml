@@ -1,0 +1,15 @@
+name: gh_pages
+
+on: [push]
+
+jobs:
+  build:
+
+    runs-on: ubuntu-18.04
+
+    steps:
+    - uses: actions/checkout@v1
+    - name: Run Scrip
+      run: |
+        git checkout hugo
+        ls -la
