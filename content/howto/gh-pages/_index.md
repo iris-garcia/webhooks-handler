@@ -1,7 +1,7 @@
 +++
 title = "GitHub Pages"
 author = ["Iris Garcia"]
-lastmod = 2019-09-22T13:22:52+02:00
+lastmod = 2019-09-22T13:50:36+02:00
 tags = ["ci", "hugo", "doc"]
 draft = false
 weight = 1
@@ -48,4 +48,101 @@ git push origin gh-pages
 ```
 
 
-## Step 2: Adding GitHub's action {#step-2-adding-github-s-action}
+## Step 2: Generate a SSH key. {#step-2-generate-a-ssh-key-dot}
+
+```bash
+ssh-keygen -t rsa -f hugo -q -N ""
+```
+
+{{% notice note %}}
+This will generate the files: `hugo` and `hugo.pub` which will be
+needed for the next steps.
+{{% /notice %}}
+
+
+## Step 3: Add a deployment key {#step-3-add-a-deployment-key}
+
+Navigate to your GitHub's repository settings and under **Deploy keys**
+and add a new one using the content of the `hugo` SSH private key
+generated in the previous step.
+
+{{< figure src="https://iris-garcia.github.io/webhooks-handler/images/deploy%5Fkey.png" >}}
+
+{{% notice warning %}}
+Make sure the **Allow write access** is checked, otherwise the GitHub's
+Action won't be able to push changes.
+{{% /notice %}}
+
+
+## Step 4: Add the GitHub's Action. {#step-4-add-the-github-s-action-dot}
+
+Create the needed directory in the **hugo** branch:
+
+```bash
+git checkout hugo
+mkdir -p .github/workflows
+```
+
+Add a new file in the path `.github/workflows/gh_pages.yml` with the
+following content:
+
+{{< highlight yaml "hl_lines=35" >}}
+name: gh_pages
+
+on:
+  push:
+    branches:
+      - hugo
+
+jobs:
+  build:
+
+    runs-on: ubuntu-18.04
+
+    steps:
+    - uses: actions/checkout@v1
+    - name: Installs hugo
+      run: |
+        cd /tmp
+        wget https://github.com/gohugoio/hugo/releases/download/v0.57.0/hugo_0.57.0_Linux-64bit.deb
+        sudo dpkg -i hugo_0.57.0_Linux-64bit.deb
+        hugo version
+    - name: Build hugo site
+      run: |
+        rm -rf public
+        git worktree add -b gh-pages public origin/gh-pages
+        hugo
+
+    - name: Configure git and deployment key
+      env:
+        GITHUB_DEPLOY_KEY: ${{ secrets.GITHUB_DEPLOY_KEY }}
+      run: |
+        mkdir /home/runner/.ssh
+        ssh-keyscan -t rsa github.com >/home/runner/.ssh/known_hosts
+        echo "${GITHUB_DEPLOY_KEY}" > /home/runner/.ssh/id_rsa && \
+        chmod 400 /home/runner/.ssh/id_rsa
+        git remote set-url origin git@github.com:iris-garcia/webhooks-handler.git
+        git config --global user.name "GitHub Action"
+        git config --global user.email "action@github.com"
+
+    - name: Commit and push changes to gh-pages
+      run: |
+        cd public
+        git add --all
+        git commit -m "Publishing to gh-pages branch"
+        cd ..
+        git push origin gh-pages
+{{< /highlight >}}
+
+{{% notice note %}}
+Replace the origin's remote with your repository.
+{{% /notice %}}
+
+Finally commit and push the changes (which should trigger already the
+Action).
+
+```bash
+git add .github/workflows/gh_pages.yml
+git commit -m "Adds GitHub's Action to build hugo site."
+git push origin hugo
+```
