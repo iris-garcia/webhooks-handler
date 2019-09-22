@@ -4,6 +4,9 @@
 #+HUGO_AUTO_SET_LASTMOD: t
 #+OPTIONS: toc:nil
 
+#+macro: image [[https://iris-garcia.github.io/webhooks-handler/images/$1]]
+#+macro: section [[https://iris-garcia.github.io/webhooks-handler/$1/][$2]]
+
 * Homepage
 :PROPERTIES:
 :EXPORT_HUGO_CUSTOM_FRONT_MATTER: :nocomment true :nodate true :nopaging true :noread true :chapter true
@@ -13,13 +16,73 @@
 :EXPORT_FILE_NAME: _index
 :END:
 <h1>Webhooks Handler</h1>
-[[./images/webhooks_handler.png]]
+{{{image(webhooks_handler.png)}}}
 
 
 {{% notice tip %}}
 This site will host the documentation for Webhooks Handler.
 {{% /notice %}}
 
+* Sections
+** How-to
+:PROPERTIES:
+:EXPORT_HUGO_SECTION: howto
+:EXPORT_HUGO_WEIGHT: 2
+:END:
+*** How-to
+:PROPERTIES:
+:EXPORT_FILE_NAME: _index
+:EXPORT_HUGO_CUSTOM_FRONT_MATTER: :chapter true
+:END:
+<h1>How to's Section</h1>
+Table of contents:
+- {{{section(howto/gh-pages,GitHub Pages)}}}
+*** GitHub Pages                                              :ci:hugo:doc:
+:PROPERTIES:
+:EXPORT_HUGO_SECTION: howto/gh-pages
+:EXPORT_HUGO_WEIGHT: 1
+:END:
+**** GitHub Pages
+:PROPERTIES:
+:EXPORT_FILE_NAME: _index
+:EXPORT_HUGO_CUSTOM_FRONT_MATTER: :asciinema true
+:END:
+This document ilustrates how to setup [[https://pages.github.com/][GitHub Pages]] using [[https://gohugo.io/][Hugo]] as
+website generator and [[https://github.com/features/actions][GitHub's Actions]] to automate the deployment
+process.
+
+There are different alternatives to setup GitHub pages, the one used
+in here is a project pages using ~gh-pages~ branch, the advantages
+are:
+- It keeps your source and generated website in different branches and
+  therefore maintains version control history for both.
+- It uses the default Hugo's *public* folder.
+
+So basically this project's repository has the following branches:
+- *master*: Hosts the source code of the project.
+- *hugo*: Hosts the source code of the documentation website.
+- *gh-pages*: Hosts the static assets generates by hugo.
+
+***** Step 1: Initializing branches
+#+begin_src bash
+# Hugo branch
+git checkout -b hugo
+echo "public" >> .gitignore
+git add .gitignore
+git commit -m "Adds .gitignore"
+hugo new site .
+git add .
+git commit -m "Adds initial hugo site"
+git push origin hugo
+
+# gh-pages branch
+git checkout --orphan gh-pages
+git reset --hard
+git commit --allow-empty -m "Initializing gh-pages branch"
+git push origin gh-pages
+#+end_src
+
+***** Step 2: Adding GitHub's action
 
 * Footnotes
 [fn:1] Footnote example
