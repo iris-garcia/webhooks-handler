@@ -2,4 +2,5 @@
 *.test
 
 # Vendor folder
-vendor/
+vendor
+public
