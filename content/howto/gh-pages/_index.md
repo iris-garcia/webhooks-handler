@@ -1,7 +1,7 @@
 +++
 title = "GitHub Pages"
 author = ["Iris Garcia"]
-lastmod = 2019-09-22T13:50:36+02:00
+lastmod = 2019-09-22T13:59:19+02:00
 tags = ["ci", "hugo", "doc"]
 draft = false
 weight = 1
@@ -146,3 +146,14 @@ git add .github/workflows/gh_pages.yml
 git commit -m "Adds GitHub's Action to build hugo site."
 git push origin hugo
 ```
+
+
+## Step 5: Verify the Action {#step-5-verify-the-action}
+
+If everything went well you should already have your site updated and a
+new commit to the `gh-pages` branch.
+
+You can also see the output of the Action navigating to the **Actions**
+section of your repository.
+
+{{< figure src="https://iris-garcia.github.io/webhooks-handler/images/gh%5Faction.png" >}}

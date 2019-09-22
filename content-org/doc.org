@@ -176,6 +176,16 @@ git commit -m "Adds GitHub's Action to build hugo site."
 git push origin hugo
 #+end_src
 
+***** Step 5: Verify the Action
+If everything went well you should already have your site updated and a
+new commit to the ~gh-pages~ branch.
+
+You can also see the output of the Action navigating to the *Actions*
+section of your repository.
+
+{{{image(gh_action.png)}}}
+
+
 * Footnotes
 [fn:1] Footnote example
 
