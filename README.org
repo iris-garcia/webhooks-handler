@@ -1,18 +1,53 @@
 [[https://www.gnu.org/licenses/gpl-3.0][https://img.shields.io/badge/License-GPLv3-blue.svg]]
 
-* Description
-GitHub allows to register [[https://developer.github.com/webhooks/][Webhooks]] for your repositories. Everytime an
-[[https://developer.github.com/v3/activity/events/][Event]] occurs a call to the registered endpoint will be made with the
-details of the Event.
+* Webhooks Handler
+Is a simple HTTP server which listens to GitHub's [[https://developer.github.com/v3/activity/events/][Events]]
+then it runs action/s defined either locally or in the repository's config
+file which triggered the event, enabling the clients to setup
+Continuous Integration workflows.
 
-This library is a handler for those Events, allowing the user to put
-any logic for a given Event and react accordingly.
+* Why?
+There are some companies which provide hosting for software
+development version control using Git like [[https://github.com][GitHub]] or [[https://bitbucket.org/][Bitbucket]] and
+some of them also offer features to automatically run actions based on
+events like [[https://docs.gitlab.com/ee/ci/][GitLab CI]] or the new [[https://github.com/features/actions][GitHub Actions]], which allows the user
+to easily setup Continuous Integration workflows.
 
-The choosen language is [[https://golang.org/][Go]] for different reasons, but the two main
+The reality is that most of the IT companies do not host
+their internal repositories in those providers but internally using
+for example [[https://bitbucket.org/product/pricing?tab=self-hosted][Bitbucket server]] or [[https://about.gitlab.com/pricing/#self-managed][GitLab self-hosted]] and therefore
+losing the Continuous Integration features in some cases.
+
+* Language
+The chosen language is [[https://golang.org/][Go]] for different reasons, but the two main
 ones are:
 1. It is already used in many services and libraries.
 2. It is a challenge for myself because as the time of writting I did
    never code in Go.
 
-* Example
-To be done.
+* Configuration
+This section needs to be defined, but initially the idea is to use
+configuration files as similar as possible to the ones used by
+GitHub's Actions.
+
+#+begin_src yaml
+  name: test
+  on:
+    push:
+      branches:
+        - master
+  jobs:
+    build:
+      steps:
+      - name: Installs hugo
+        run: |
+          cd /app
+          wget https://github.com/gohugoio/hugo/releases/download/v0.57.0/hugo_0.57.0_Linux-64bit.deb
+          sudo dpkg -i hugo_0.57.0_Linux-64bit.deb
+          hugo version
+
+      - name: Send slack notification
+        notification: slack
+        to: "#test-channel"
+        message: "Hello from webhooks handler."
+#+end_src
